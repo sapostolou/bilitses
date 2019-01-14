@@ -8,33 +8,7 @@ import datetime
 import json
 from math import floor,log,ceil
 from functions import validSolution, addNodeToTemplate
-from algorithms import DP,DPH
-
-def maxDegree(candidates, APSP, template, G, degreeDict):
-    nodesUsed = set()
-    maxDegNode = None
-    maxDeg = 0
-    result = dict()
-    for v in candidates[0]:
-        if degreeDict[v] > maxDeg:
-            maxDeg = degreeDict[v]
-            maxDegNode = v
-    result[0] = maxDegNode
-    nodesUsed.add(maxDegNode)
-
-    resultCost = 0
-    bfsEdges = nx.bfs_edges(template,0)
-    for v,u in bfsEdges:
-        maxDeg = 0
-        maxDegNode = None
-        for w in candidates[u]:
-            if degreeDict[w] > maxDeg and w not in nodesUsed:
-                maxDegNode = w
-                maxDeg = degreeDict[w]
-        result[u] = maxDegNode
-        nodesUsed.add(maxDegNode)
-        resultCost += APSP[result[v]][maxDegNode]
-    return resultCost, result
+from algorithms import DP,DPH,maxDegree
 
 def TopDown(candidates,APSP,template,G,centralityDict):
     bfsEdges = nx.bfs_edges(template,0)

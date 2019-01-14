@@ -87,3 +87,29 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
 
 def DP(candidatesDict, APSP, T, ordering):
     return DPH(candidatesDict,APSP,T,ordering,False)
+
+def maxDegree(candidates, APSP, template, G, degreeDict):
+    nodesUsed = set()
+    maxDegNode = None
+    maxDeg = 0
+    result = dict()
+    for v in candidates[0]:
+        if degreeDict[v] > maxDeg:
+            maxDeg = degreeDict[v]
+            maxDegNode = v
+    result[0] = maxDegNode
+    nodesUsed.add(maxDegNode)
+
+    resultCost = 0
+    bfsEdges = nx.bfs_edges(template,0)
+    for v,u in bfsEdges:
+        maxDeg = 0
+        maxDegNode = None
+        for w in candidates[u]:
+            if degreeDict[w] > maxDeg and w not in nodesUsed:
+                maxDegNode = w
+                maxDeg = degreeDict[w]
+        result[u] = maxDegNode
+        nodesUsed.add(maxDegNode)
+        resultCost += APSP[result[v]][maxDegNode]
+    return resultCost, result
