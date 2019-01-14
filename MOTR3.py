@@ -20,99 +20,6 @@ from math import floor,log,ceil
 from functions import validSolution, addNodeToTemplate
 from algorithms import DP,DPH
 
-# def validSolution(solution, template, candidates):
-#     if solution == None:
-#         print 'failure'
-#         return True
-#     numKeys = len(solution)
-#     if numKeys != template.number_of_nodes():
-#         print 'not valid 1',solution
-#         return False
-#     duplicates = [k for k,v in Counter(solution.values()).items() if v>1]
-#     if len(duplicates) > 0:
-#         print 'not valid 2',solution
-#         return False
-#     for k in solution:
-#         if solution[k] not in candidates[k]:
-#             print 'not valid 3'
-#             return False
-#     return True
-
-# def DPwithOverlapCheck(initialDict, APSP, T, ordering):
-#     candidatesDict = copy.deepcopy(initialDict)
-#     matrix = dict()
-#     counter = 0
-#     # the id of the root node with the maximum value
-#     rootNodeWithMinValue = -1
-#     # the value of the root node in template tree with the maximum value
-#     minValueOfRoot = sys.maxint
-#     # when true this is the final iteration, i.e. the last node of the template is examined
-#     finalIter = False
-#     minNodeDict = dict()
-#     minNode = None
-    
-#     halt = False
-
-#     for v in ordering: # v is the node in the post ordering of the nodes in T. go bottom up in the template tree
-#         # if true this is the final iteration so switch the value of finalIter
-#         if counter == (T.number_of_nodes() - 1):
-#             finalIter = True
-
-#         counter += 1
-
-#         # for each candicate for position v
-#         for z in list(candidatesDict[v]):
-#             sumValues = 0
-#             nodeDict = dict()
-            
-#             if z not in APSP:
-#                 continue
-
-#             # for each successor of v in T
-#             for u in T.successors(v):
-#                 minValue = sys.maxint
-#                 minNode = None
-#                 minNodeDict = None
-
-#                 # for each candidate for position u (the successor of v)
-#                 for w in list(candidatesDict[u]):
-
-#                     if (w not in APSP) or (z not in APSP[w]):
-#                         continue
-
-#                     nodesInCandidatesSubsolution = set(matrix[w,u].d.values())
-#                     forbiddenNodes = set(nodeDict.values()) | set([z])
-#                     if w in forbiddenNodes or nodesInCandidatesSubsolution & forbiddenNodes != set([]): 
-#                         continue
-
-#                     # find candidate whose value plus distance from z is minimum
-#                     if ((matrix[w, u].v + APSP[w][z]) < minValue):
-#                         minValue = matrix[w, u].v + APSP[w][z]
-#                         minNode = w
-#                         minNodeDict = matrix[w, u].d
-
-#                 if minNode == None:
-#                     # print "\nNoone found for position",u,"with skill",T.node[u]['skill'],"and with",z,"in position",v
-#                     # print "Candidates for",v,":",len(candidatesDict[v])
-#                     # print "Candidates for",u,":",len(candidatesDict[u])
-#                     return None, None
-#                 # the following lines are required to merge the dict of minNode and nodeDict in order to form the dict of the parent
-#                 nodeDictNew = minNodeDict.copy()
-#                 nodeDictNew.update(nodeDict)
-
-#                 nodeDict = nodeDictNew
-#                 nodeDict[u]=minNode
-#                 sumValues = sumValues + minValue
-
-#             currentCell = Cell(sumValues, nodeDict)
-
-#             if sumValues < minValueOfRoot and finalIter:
-#                 minValueOfRoot = sumValues
-#                 rootNodeWithMinValue = z
-#             matrix[z, v] = currentCell
-#     matrix[rootNodeWithMinValue,0].d[0] = rootNodeWithMinValue
-#     return minValueOfRoot, matrix[rootNodeWithMinValue,0].d
-
 def maxDegree(candidates, APSP, template, G, degreeDict):
     nodesUsed = set()
     maxDegNode = None
@@ -244,74 +151,6 @@ def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict
     
     return currentValues, currentTimes
 
-    # before = datetime.datetime.now()
-    # value, solution = DPH(candidatesDict, APSP, template, postOrdering)
-    # time = (datetime.datetime.now() - before).total_seconds()
-
-    # # if not validSolution(solution, template, candidatesDict):
-    # #     return
-    # # if value != None:
-    # #     valueMeasurements[i+1][0].append(value)
-    # #     timeMeasurements[i+1][0].append(time)
-    # currentValues.append(value)
-    # currentTimes.append(time)
-
-    # before = datetime.datetime.now()
-    # value, solution = maxDegree(candidatesDict, APSP, template, G, degreeDict)
-    # time = (datetime.datetime.now() - before).total_seconds()
-    # if not validSolution(solution, template, candidatesDict):
-    #     print "not valid solution maxDegree"
-    #     return
-    # # valueSums[i+1]['maxDeg'] += value
-    # # timeSums[i+1]['maxDeg'] += time
-    # if value != None:
-    #     valueMeasurements[i+1][1].append(value)
-    #     timeMeasurements[i+1][1].append(time)
-    # currentValues.append(value)
-    # currentTimes.append(time)
-
-    # before = datetime.datetime.now()
-    # value, solution = maxDegree(candidatesDict, APSP, template, G, centralityDict)
-    # time = (datetime.datetime.now() - before).total_seconds()
-    # if not validSolution(solution, template, candidatesDict):
-    #     print "not valid solution maxCen"
-    #     return
-    # # valueSums[i+1]['maxCen'] += value
-    # # timeSums[i+1]['maxCen'] += time
-    # if value != None:
-    #     valueMeasurements[i+1][2].append(value)
-    #     timeMeasurements[i+1][2].append(time)
-    # currentValues.append(value)
-    # currentTimes.append(time)
-
-    # before = datetime.datetime.now()
-    # value, solution = TopDown(candidatesDict, APSP, template, G, centralityDict)
-    # time = (datetime.datetime.now() - before).total_seconds()
-    # if not validSolution(solution, template, candidatesDict):
-    #     print "not valid solution TopDown"
-    #     return
-    # # valueSums[i+1]['topDown'] += value
-    # # timeSums[i+1]['topDown'] += time
-    # if value != None:
-    #     valueMeasurements[i+1][3].append(value)
-    #     timeMeasurements[i+1][3].append(time)
-    # currentValues.append(value)
-    # currentTimes.append(time)
-
-    # before = datetime.datetime.now()
-    # value, solution = TopDownCheckAllForRoot(candidatesDict, APSP, template, G, centralityDict)
-    # time = (datetime.datetime.now() - before).total_seconds()
-    # if not validSolution(solution, template, candidatesDict):
-    #     print "not valid solution TopDown+"
-    #     return
-    # # valueSums[i+1]['topDownPlus'] += value
-    # # timeSums[i+1]['topDownPlus'] += time
-    # if value != None:
-    #     valueMeasurements[i+1][4].append(value)
-    #     timeMeasurements[i+1][4].append(time)
-    # currentValues.append(value)
-    # currentTimes.append(time)
-
 def main():
 
     with open('config.json') as data_file:    
@@ -350,15 +189,6 @@ def main():
     skillToWorkers= defaultdict(list)
     skills = set()
     confToFieldMapping = dict()
-    # with open(confsAndFieldsFileLocation) as tsv:
-    #     for line in csv.reader(tsv, delimiter =' '):
-    #         confName = line[0]
-    #         fieldName = line[1]
-    #         if useFields:
-    #             skills.add(fieldName)
-    #         else:
-    #             skills.add(confName)
-    #         confToFieldMapping[confName]=fieldName
     if fileLocation.find('movies')>-1:
         dlmtr = ','
     else:
@@ -377,36 +207,6 @@ def main():
                 skills.add(authorSkills[0])
                 if G.has_node(workerID):
                     skillToWorkers[authorSkills[0]].append(workerID)
-
-    # print 'Matching seniority and workers'
-    # seniorityToAuthor = defaultdict(list)
-    # with open(authorsAndSen) as f:
-    #     for line in f:
-    #         t = line.split(' ')
-    #         authorID = t[0]
-    #         seniority = t[1]
-
-    #         if seniority[-1] == "\n":
-    #             seniority = seniority[:-1]
-
-    #         if seniority not in seniorityToAuthor:
-    #             seniorityToAuthor[seniority] = [authorID]
-    #         else:
-    #             seniorityToAuthor[seniority].append(authorID)
-        
-    # template = nx.DiGraph()
-    # template.add_node(0)
-    # randomSkill = random.sample(skills, 1)[0]
-    # template.node[0]['skill'] = randomSkill
-    # template.node[0]['seniority'] = "high"
-    # remainingSkills = set(skills) - set([randomSkill])
-    #print "Node Skill DPwithOverlapCheck_t DPwithOverlapCheck_v maxDegree_t maxDegree_v maxCentrality_t maxCentrality_v TopDown_t TopDown_v TopDownCheckAllForRoot_t TopDownCheckAllForRoot_v"
-    #print "0", template.node[0]['skill']
-    
-    # candidatesDict = defaultdict(list)
-    # for u in skillToWorkers[template.node[0]['skill']]:
-    #     if u in set(seniorityToAuthor[template.node[0]['seniority']]) and u in APSP:
-    #         candidatesDict[0].append(u)
     
     if not repeatedSkillsInTemplate:
         maxNodesInTemplate = len(skills)
@@ -415,22 +215,6 @@ def main():
     valueSums = dict()
     timeSums = dict()
     templateSizes = range(2,maxNodesInTemplate+1)
-    # for i in templateSizes:
-    #     valueSums[i] = {
-    #         'dp':0,
-    #         'maxDeg':0,
-    #         'maxCen':0,
-    #         'topDown':0,
-    #         'topDownPlus':0
-    #     }
-    #     timeSums[i] = {
-    #         'dp':0,
-    #         'maxDeg':0,
-    #         'maxCen':0,
-    #         'topDown':0,
-    #         'topDownPlus':0
-    #     }
-    # 0:dp, 1:maxDeg, 2:maxCen, 3:topDown, 4:topDownPlus
     valueMeasurements = dict()
     timeMeasurements = dict()
     allSuccessfulValueMeasurements = dict()
@@ -465,28 +249,12 @@ def main():
             if not repeatedSkillsInTemplate:
                 remainingSkills.remove(newNodeSkill)
                 
-            # if templateType == 'star' and i> 0:
-            #     height = 1
-            # elif templateType == 'star' and i == 0:
-            #     height = 0
-            # elif templateType == 'cbt':
-            #     height = floor(log(i+1,2))
-
-            # heightToSeniorityDict = {
-            #     0:'high',
-            #     1:'medium',
-            #     2:'low',
-            #     3:'low',
-            #     4:'low'
-            # }
-            # newNodeSeniority = heightToSeniorityDict[height]
             template.node[i]['skill'] = newNodeSkill
-            # template.node[j]['seniority'] = newNodeSeniority
 
             # Create candidate set for new node
 
             for u in skillToWorkers[template.node[i]['skill']]:
-                if u in APSP: # and u in set(seniorityToAuthor[template.node[j]['seniority']]):
+                if u in APSP:
                     candidatesDict[i].append(u)
             
             # if there is only one node in template move to next iteration
@@ -584,17 +352,6 @@ def main():
         f.write('Nodes in G:' + str(G.number_of_nodes()) + '\n')
         f.write('Edges in G:' + str(G.number_of_edges()) + '\n')
         f.write('Iterations: '+str(numIterations))
-    
-
-    # with open(str(name)+'_values.txt','w') as f:
-    #     for i in valueSums:
-    #         f.write(str(i) + "," + str(valueSums[i]['dp']) + "," + str(valueSums[i]['maxDeg']) + "," + str(valueSums[i]['maxCen']) + "," + str(valueSums[i]['topDown']) + "," + str(valueSums[i]['topDownPlus']))
-    #         f.write('\n')
-
-    # with open(str(name)+'_times.txt','w') as f:
-    #     for i in timeSums:
-    #         f.write(str(i) + "," + str(timeSums[i]['dp']) + "," + str(timeSums[i]['maxDeg']) + "," + str(timeSums[i]['maxCen']) + "," + str(timeSums[i]['topDown']) + "," + str(timeSums[i]['topDownPlus']))
-    #         f.write('\n')
 
 if __name__ == "__main__":
     main()
