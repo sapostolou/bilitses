@@ -11,18 +11,14 @@ from functions import validSolution, addNodeToTemplate
 from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot
 
 def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G):
-    # Create ordering
+
     postOrdering = list(nx.dfs_postorder_nodes(template, 0))
-
-    # Execute algorithms
-
     currentValues = []
     currentTimes = []
 
     for i in range(0,5):
-
         before = datetime.datetime.now()
-
+        
         if i == 0:
             value, solution = DPH(candidatesDict, APSP, template, postOrdering)
         elif i == 1:
