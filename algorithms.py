@@ -113,7 +113,7 @@ def maxDegree(candidates, APSP, template, G, degreeDict):
         nodesUsed.add(maxDegNode)
         resultCost += APSP[result[v]][maxDegNode]
     return resultCost, result
-    
+
 def TopDown(candidates,APSP,template,G,centralityDict):
     bfsEdges = nx.bfs_edges(template,0)
     maxRootCentrality = 0
@@ -147,3 +147,43 @@ def TopDown(candidates,APSP,template,G,centralityDict):
         resultSum = resultSum + closestNodeDistance
         nodesUsed.add(closestNode)
     return resultSum, result
+
+def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
+    bfsEdges = list(nx.bfs_edges(template,0))
+    result = dict()
+    resultSum = 0
+    rootCandidatesAndValues = dict()
+    minRootValue = sys.maxint
+    minSolution = None
+
+    for r in candidates[0]:
+
+        nodesUsed_r = set()
+        conflicts = set()
+        nodesUsed_r.add(r)
+        result_r = dict()
+        result_r[0] = r
+        sum_r = 0
+    
+        # for each successor pick the closest vertex in the respective candidate set
+        for v,u in bfsEdges:
+            closestNode = None
+            closestNodeDistance = sys.maxint
+            candidates_u = list(candidates[u])
+            for x in candidates_u:
+                if APSP[result_r[v]][x] < closestNodeDistance and x not in nodesUsed_r:
+                    closestNodeDistance = APSP[result_r[v]][x]
+                    closestNode = x
+            if closestNode == None:
+                print "no node found"
+
+            result_r[u] = closestNode
+            sum_r += closestNodeDistance
+            nodesUsed_r.add(closestNode)
+
+        result_r[0] = r
+        if sum_r < minRootValue:
+            minRootValue = sum_r
+            minSolution = result_r
+
+    return minRootValue, minSolution
