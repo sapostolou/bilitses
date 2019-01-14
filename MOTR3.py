@@ -1,21 +1,11 @@
-# In this file the greedy algorithm for the generic problem is implemented.
-# Heuristic1 only evaluates all candidates for the root node in the template and then greedily picks the best node for the root and moves downwards to the children
-# Pick the candidate with max degree
-
 import networkx as nx
-from collections import Counter
 import csv
 import sys
-import pickle
 from collections import defaultdict
 import random
 random.seed()
-#from test import total_size
-from multiprocessing import Pool
 import datetime
 import json
-import os.path
-import copy
 from math import floor,log,ceil
 from functions import validSolution, addNodeToTemplate
 from algorithms import DP,DPH
