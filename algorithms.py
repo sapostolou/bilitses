@@ -113,3 +113,37 @@ def maxDegree(candidates, APSP, template, G, degreeDict):
         nodesUsed.add(maxDegNode)
         resultCost += APSP[result[v]][maxDegNode]
     return resultCost, result
+    
+def TopDown(candidates,APSP,template,G,centralityDict):
+    bfsEdges = nx.bfs_edges(template,0)
+    maxRootCentrality = 0
+    maxRootCentralityNode = None
+    result = dict()
+    resultSum = 0
+    nodesUsed = set()
+
+    # for root pick node with highest degree centrality
+    for u in candidates[0]:
+        if centralityDict[u]>maxRootCentrality:
+            maxRootCentrality = centralityDict[u]
+            maxRootCentralityNode = u
+    result[0] = maxRootCentralityNode
+    nodesUsed.add(maxRootCentralityNode)
+    
+    # for each successor pick the closest vertex in the respective candidate set
+    for v,u in bfsEdges:
+        closestNode = None
+        closestNodeDistance = sys.maxint
+        for w in candidates[u]:
+            if (w in nodesUsed) or (w not in APSP):
+                continue
+            currDist = APSP[result[v]][w]
+            if currDist < closestNodeDistance:
+                closestNodeDistance = currDist
+                closestNode = w
+        if closestNode == None:
+            print "no node found"
+        result[u] = closestNode
+        resultSum = resultSum + closestNodeDistance
+        nodesUsed.add(closestNode)
+    return resultSum, result
