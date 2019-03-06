@@ -54,21 +54,21 @@ def main():
     manySkillsPerWorker = bool(config['manySkillsPerWorker'])
     useFields = bool(config['useFields'])
 
-    print 'Reading edge list and creating G...'
+    print('Reading edge list and creating G...')
 
     G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
-    print 'Nodes: ',G.number_of_nodes()
-    print 'Edges: ',G.number_of_edges()
+    print('Nodes: ',G.number_of_nodes())
+    print('Edges: ',G.number_of_edges())
         
-    print 'Creating APSP aaaaand...',
+    print('Creating APSP aaaaand...',
     before = datetime.datetime.now()
     APSP = nx.all_pairs_shortest_path_length(G)
-    print "Done. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds."        
+    print("Done. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds."   )     
 
-    print 'Calculating centrality'
+    print('Calculating centrality')
     centralityDict = nx.closeness_centrality(G)
 
-    print 'Calculating degrees'
+    print('Calculating degrees')
     degreeDict = G.degree()
 
     # skillToWorkers contains a map of skill to person ids relative to it
@@ -79,7 +79,7 @@ def main():
         dlmtr = ','
     else:
         dlmtr = ' '
-    print 'Assigning skills to workers...'
+    print('Assigning skills to workers...')
     with open(authorAndFieldFileLocation) as tsv:
         for line in csv.reader(tsv,delimiter=dlmtr):
             workerID = line[0]
@@ -120,7 +120,7 @@ def main():
 
     numIterations = 50
     for iteration in range(0,numIterations):
-        print "iteration:",iteration
+        print("iteration:",iteration)
         template = nx.DiGraph()
         candidatesDict = dict()
         remainingSkills = list(skills)
