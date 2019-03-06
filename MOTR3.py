@@ -165,26 +165,13 @@ def main():
 
     for templateSize in valueMeasurements:
         for alg in valueMeasurements[templateSize]:
-            measCount = len(valueMeasurements[templateSize][alg])
             iterationsMissing = numIterations - measCount
-            measSum = sum(valueMeasurements[templateSize][alg])
-            measAvg = measSum/float(measCount)
-            valueMeasurements[templateSize][alg] = measAvg
 
-            measCount = len(allSuccessfulValueMeasurements[templateSize][alg])
-            measSum = sum(allSuccessfulValueMeasurements[templateSize][alg])
-            measAvg = measSum/float(measCount)
-            allSuccessfulValueMeasurements[templateSize][alg] = measAvg
-            
-            measCount = len(timeMeasurements[templateSize][alg])
-            measSum = sum(timeMeasurements[templateSize][alg])
-            measAvg = measSum/float(measCount)
-            timeMeasurements[templateSize][alg] = measAvg
-
-            measCount = len(allSuccessfulTimeMeasurements[templateSize][alg])
-            measSum = sum(allSuccessfulTimeMeasurements[templateSize][alg])
-            measAvg = measSum/float(measCount)
-            allSuccessfulTimeMeasurements[templateSize][alg] = measAvg
+            # Get averages
+            valueMeasurements[templateSize][alg]                = sum(valueMeasurements[templateSize][alg])                 / float(len(valueMeasurements[templateSize][alg]))
+            allSuccessfulValueMeasurements[templateSize][alg]   = sum(allSuccessfulValueMeasurements[templateSize][alg])    / float(len(allSuccessfulValueMeasurements[templateSize][alg]))
+            timeMeasurements[templateSize][alg]                 = sum(timeMeasurements[templateSize][alg])                  / float(len(timeMeasurements[templateSize][alg]))
+            allSuccessfulTimeMeasurements[templateSize][alg]    = sum(allSuccessfulTimeMeasurements[templateSize][alg])     / float(len(allSuccessfulTimeMeasurements[templateSize][alg]))
             
             failures[templateSize][alg] = iterationsMissing / float(numIterations)
 
