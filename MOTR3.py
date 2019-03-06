@@ -73,7 +73,7 @@ def main():
     # skillToWorkers contains a map of skill to person ids relative to it
     skillToWorkers= defaultdict(list)
     skills = set()
-    confToFieldMapping = dict()
+    
     if fileLocation.find('movies')>-1:
         dlmtr = ','
     else:
