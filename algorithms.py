@@ -142,7 +142,7 @@ def TopDown(candidates,APSP,template,G,centralityDict):
                 closestNodeDistance = currDist
                 closestNode = w
         if closestNode == None:
-            print "no node found"
+            print("no node found")
         result[u] = closestNode
         resultSum = resultSum + closestNodeDistance
         nodesUsed.add(closestNode)
@@ -175,7 +175,7 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
                     closestNodeDistance = APSP[result_r[v]][x]
                     closestNode = x
             if closestNode == None:
-                print "no node found"
+                print("no node found")
 
             result_r[u] = closestNode
             sum_r += closestNodeDistance
