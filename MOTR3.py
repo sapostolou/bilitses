@@ -7,7 +7,7 @@ random.seed()
 import datetime
 import json
 from math import floor,log,ceil
-from functions import validSolution, addNodeToTemplate
+from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles
 from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot
 
 def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G):
@@ -62,7 +62,7 @@ def main():
 
     before = datetime.datetime.now()
     APSP = nx.all_pairs_shortest_path_length(G)
-    print("APSP created. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds."   )     
+    print("APSP created. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
     print('Calculating centrality')
     centralityDict = nx.closeness_centrality(G)
