@@ -46,3 +46,18 @@ class Cell:
     def __init__(self, value, diction):
         self.v = value
         self.d = diction
+
+def getBaseNameOfOutputFiles(manySkillsPerWorker, repeatedSkillsInTemplate, templateType):
+    name = ''
+    if manySkillsPerWorker:
+        name += 'm'
+    else:
+        name += 's'
+    name +='ot'
+    if repeatedSkillsInTemplate:
+        name += 'r_'
+    else:
+        name += 'u_'
+    name += templateType
+
+    return name

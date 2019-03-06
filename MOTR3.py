@@ -176,36 +176,28 @@ def main():
             failures[templateSize][alg] = iterationsMissing / float(numIterations)
 
     xaxis = templateSizes
-    name = ''
-    if manySkillsPerWorker:
-        name += 'm'
-    else:
-        name += 's'
-    name +='ot'
-    if repeatedSkillsInTemplate:
-        name += 'r_'
-    else:
-        name += 'u_'
-    name += templateType
-    with open(name + '_all_values.txt','w') as f:
+
+    baseName = getBaseNameOfOutputFiles(manySkillsPerWorker, repeatedSkillsInTemplate, templateType)
+    
+    with open(baseName + '_all_values.txt','w') as f:
         for templateSize in valueMeasurements:
             f.write(str(templateSize))
             for alg in valueMeasurements[templateSize]:
                 f.write(" "+str(valueMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(name + '_all_times.txt','w') as f:
+    with open(baseName + '_all_times.txt','w') as f:
         for templateSize in timeMeasurements:
             f.write(str(templateSize))
             for alg in timeMeasurements[templateSize]:
                 f.write(" "+str(timeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(name + '_allSuccessful_values.txt','w') as f:
+    with open(baseName + '_allSuccessful_values.txt','w') as f:
         for templateSize in allSuccessfulValueMeasurements:
             f.write(str(templateSize))
             for alg in allSuccessfulValueMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulValueMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(name + '_allSuccessful_times.txt','w') as f:
+    with open(baseName + '_allSuccessful_times.txt','w') as f:
         for templateSize in allSuccessfulTimeMeasurements:
             f.write(str(templateSize))
             for alg in allSuccessfulTimeMeasurements[templateSize]:
