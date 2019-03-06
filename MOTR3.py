@@ -59,11 +59,10 @@ def main():
     G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
     print('Nodes: ',G.number_of_nodes())
     print('Edges: ',G.number_of_edges())
-        
-    print('Creating APSP aaaaand...',
+
     before = datetime.datetime.now()
     APSP = nx.all_pairs_shortest_path_length(G)
-    print("Done. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds."   )     
+    print("APSP created. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds."   )     
 
     print('Calculating centrality')
     centralityDict = nx.closeness_centrality(G)
