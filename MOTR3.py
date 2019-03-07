@@ -164,7 +164,7 @@ def main():
 
     for templateSize in valueMeasurements:
         for alg in valueMeasurements[templateSize]:
-            iterationsMissing = numIterations - measCount
+            iterationsMissing = numIterations - len(valueMeasurements[templateSize][alg])
 
             # Get averages
             valueMeasurements[templateSize][alg]                = sum(valueMeasurements[templateSize][alg])                 / float(len(valueMeasurements[templateSize][alg]))
