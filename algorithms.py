@@ -1,5 +1,7 @@
 import sys
 from functions import Cell
+import networkx as nx
+import sys
 
 def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
 
