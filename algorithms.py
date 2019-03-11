@@ -10,7 +10,7 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
     # the id of the root node with the maximum value
     rootNodeWithMinValue = -1
     # the value of the root node in template tree with the maximum value
-    minValueOfRoot = sys.maxint
+    minValueOfRoot = sys.maxsize
     # when true this is the final iteration, i.e. the last node of the template is examined
     finalIter = False
     minNodeDict = dict()
@@ -36,7 +36,7 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
 
             # for each successor of v in T
             for u in T.successors(v):
-                minValue = sys.maxint
+                minValue = sys.maxsize
                 minNode = None
                 minNodeDict = None
 
@@ -135,7 +135,7 @@ def TopDown(candidates,APSP,template,G,centralityDict):
     # for each successor pick the closest vertex in the respective candidate set
     for v,u in bfsEdges:
         closestNode = None
-        closestNodeDistance = sys.maxint
+        closestNodeDistance = sys.maxsize
         for w in candidates[u]:
             if (w in nodesUsed) or (w not in APSP):
                 continue
@@ -155,7 +155,7 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
     result = dict()
     resultSum = 0
     rootCandidatesAndValues = dict()
-    minRootValue = sys.maxint
+    minRootValue = sys.maxsize
     minSolution = None
 
     for r in candidates[0]:
@@ -170,7 +170,7 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
         # for each successor pick the closest vertex in the respective candidate set
         for v,u in bfsEdges:
             closestNode = None
-            closestNodeDistance = sys.maxint
+            closestNodeDistance = sys.maxsize
             candidates_u = list(candidates[u])
             for x in candidates_u:
                 if APSP[result_r[v]][x] < closestNodeDistance and x not in nodesUsed_r:
