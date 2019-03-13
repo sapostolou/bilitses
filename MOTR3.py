@@ -44,13 +44,6 @@ def main():
     
     fileLocation = str(config['filesBasePath'])
     edgesFileLocation = fileLocation + str(config['edgesFileName'])
-    authorAndFieldFileLocation = fileLocation + str(config['authorIDandFieldFileName'])
-    authorsAndSen = fileLocation + str(config['authorsAndSeniorityFilename'])
-
-    templateType = str(config['templateStructure'])
-    repeatedSkillsInTemplate = bool(config['repeatedSkillsInTemplate'])
-    manySkillsPerWorker = bool(config['manySkillsPerWorker'])
-    useFields = bool(config['useFields'])
 
     authorData = json.load(open('authorData.json','r'))
 
@@ -84,13 +77,13 @@ def main():
         if not G.has_node(a):
             continue
 
-        if useFields:
+        if config['useFields']:
             di = authorData[a]['fields']
         else:
             di = authorData[a]['confs']
 
         sk = []
-        if manySkillsPerWorker:
+        if config['manySkillsPerWorker']:
             for s in di:
                 sk.append(s)
         else:
@@ -100,7 +93,7 @@ def main():
             skillToWorkers[s].append(a)
             skills.add(s)
     
-    if not repeatedSkillsInTemplate:
+    if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
     else:
         maxNodesInTemplate = 31
@@ -134,11 +127,11 @@ def main():
 
             candidatesDict[i] = []  
             # Add node in template
-            template = addNodeToTemplate(template,i,templateType)
+            template = addNodeToTemplate(template,i,config['templateStructure'])
 
             # Assign conference to new node.
             newNodeSkill = random.sample(remainingSkills, 1)[0]
-            if not repeatedSkillsInTemplate:
+            if not config['repeatedSkillsInTemplate']:
                 remainingSkills.remove(newNodeSkill)
                 
             template.node[i]['skill'] = newNodeSkill
@@ -183,7 +176,7 @@ def main():
 
     xaxis = templateSizes
 
-    baseName = getBaseNameOfOutputFiles(manySkillsPerWorker, repeatedSkillsInTemplate, templateType)
+    baseName = getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure'])
     
     with open(baseName + '_all_values.txt','w') as f:
         for templateSize in valueMeasurements:
