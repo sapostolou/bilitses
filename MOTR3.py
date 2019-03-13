@@ -45,14 +45,14 @@ def main():
     fileLocation = str(config['filesBasePath'])
     edgesFileLocation = fileLocation + str(config['edgesFileName'])
     authorAndFieldFileLocation = fileLocation + str(config['authorIDandFieldFileName'])
-    authorAndConfFileLocation = fileLocation + str(config['authorIDandConfFileName'])
-    confsAndFieldsFileLocation = fileLocation + str(config['conferencesAndFieldsFilename'])
     authorsAndSen = fileLocation + str(config['authorsAndSeniorityFilename'])
 
     templateType = str(config['templateStructure'])
     repeatedSkillsInTemplate = bool(config['repeatedSkillsInTemplate'])
     manySkillsPerWorker = bool(config['manySkillsPerWorker'])
     useFields = bool(config['useFields'])
+
+    authorData = json.load(open('authorData.json','r'))
 
     print('Reading edge list and creating G...')
 
@@ -78,20 +78,27 @@ def main():
         dlmtr = ','
     else:
         dlmtr = ' '
-    print('Assigning skills to workers...')
-    with open(authorAndFieldFileLocation) as tsv:
-        for line in csv.reader(tsv,delimiter=dlmtr):
-            workerID = line[0]
-            authorSkills = line[1:]
-            if manySkillsPerWorker:
-                for s in authorSkills:
-                    skills.add(s)
-                    if G.has_node(workerID):
-                        skillToWorkers[s].append(workerID)
-            else:
-                skills.add(authorSkills[0])
-                if G.has_node(workerID):
-                    skillToWorkers[authorSkills[0]].append(workerID)
+
+    # Assign skills to workers
+    for a in authorData:
+        if not G.has_node(a):
+            continue
+
+        if useFields:
+            di = authorData[a]['fields']
+        else:
+            di = authorData[a]['confs']
+
+        sk = []
+        if manySkillsPerWorker:
+            for s in di:
+                sk.append(s)
+        else:
+            sk = [max(di.iterkeys(), key=(lambda key: di[key]))]
+        
+        for s in sk:
+            skillToWorkers[s].append(a)
+            skills.add(s)
     
     if not repeatedSkillsInTemplate:
         maxNodesInTemplate = len(skills)
