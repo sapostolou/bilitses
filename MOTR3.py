@@ -16,7 +16,7 @@ def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict
     currentValues = []
     currentTimes = []
 
-    for i in range(0,5):
+    for i in range(0,6):
         before = datetime.datetime.now()
         
         if i == 0:
