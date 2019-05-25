@@ -189,3 +189,43 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
             minSolution = result_r
 
     return minRootValue, minSolution
+
+def rarestFirst(candidates, APSP):
+    # find rarest skill i.e. the one with the smallest candidate set
+    rarestSkillCandidatesNum = sys.maxsize
+    rarestSkill = None
+    for s in candidates:
+        l = len(candidates[s])
+        if l < rarestSkillCandidatesNum:
+            rarestSkillCandidatesNum = l
+            rarestSkill = s
+
+    bestSolutionCost = sys.maxsize
+    bestSolution = None
+
+    for v in candidates[rarestSkill]:
+        solutionCost = 0
+        solution = dict()
+        for t in candidates:
+
+            if t == rarestSkill:
+                continue
+
+            closestNeighborDist = sys.maxsize
+            closestNeighbor = None
+
+            for u in candidates[t]:
+                # find the one closest to v
+                d = APSP[v][u]
+                if d < closestNeighborDist:
+                    closestNeighbor = u
+                    closestNeighborDist = d
+            
+            solutionCost += closestNeighborDist
+            solution[t][closestNeighbor]
+        
+        if solutionCost < bestSolutionCost:
+            bestSolutionCost = solutionCost
+            bestSolution = solution
+    
+    return bestSolutionCost, bestSolution
