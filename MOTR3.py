@@ -8,7 +8,7 @@ import datetime
 import json
 from math import floor,log,ceil
 from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles
-from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot
+from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot, rarestFirst
 
 def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G):
 
@@ -29,6 +29,8 @@ def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict
             value, solution = TopDown(candidatesDict, APSP, template, G, centralityDict)
         elif i == 4:
             value, solution = TopDownCheckAllForRoot(candidatesDict, APSP, template, G, centralityDict)
+        elif i == 5:
+            value, solution = rarestFirst(candidatesDict, APSP)
         
         time = (datetime.datetime.now() - before).total_seconds()
 
