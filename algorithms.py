@@ -81,8 +81,8 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
                 rootNodeWithMinValue = z
             matrix[z, v] = currentCell
         
-        if checkForOverlaps and (z,v) not in matrix:
-            return None,None
+        # if checkForOverlaps and (z,v) not in matrix:
+        #     return None,None
 
     matrix[rootNodeWithMinValue,0].d[0] = rootNodeWithMinValue
     return minValueOfRoot, matrix[rootNodeWithMinValue,0].d
