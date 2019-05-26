@@ -42,7 +42,7 @@ def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict
 def main():
 
     with open('config.json') as data_file:    
-        config = json.load(data_file,'utf-8')
+        config = json.load(data_file)
     
     fileLocation = str(config['filesBasePath'])
     edgesFileLocation = fileLocation + str(config['edgesFileName'])
