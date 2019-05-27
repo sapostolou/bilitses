@@ -47,7 +47,7 @@ def main():
     fileLocation = str(config['filesBasePath'])
     edgesFileLocation = fileLocation + str(config['edgesFileName'])
 
-    authorData = json.load(open('authorData.json','r'))
+    authorData = json.load(open(fileLocation + str(config['workerData']),'r'))
 
     print('Reading edge list and creating G...')
 
@@ -57,20 +57,20 @@ def main():
 
     before = datetime.datetime.now()
     try:
-        APSP = json.load(open('apsp.json','r'))
+        APSP = json.load(open(fileLocation+'apsp.json','r'))
         print('apsp found')
     except FileNotFoundError:
         APSP = dict(nx.all_pairs_shortest_path_length(G))
         print('apsp created')
-        json.dump(APSP,open('apsp.json','w'))
+        json.dump(APSP,open(fileLocation+'apsp.json','w'))
     print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
     print('Calculating centrality')
     try:
-        centralityDict = json.load(open('centrality.json','r'))
+        centralityDict = json.load(open(fileLocation+'centrality.json','r'))
     except FileNotFoundError:
-    centralityDict = nx.closeness_centrality(G)
-        json.dump(centralityDict,open('centrality.json','w'))
+        centralityDict = nx.closeness_centrality(G)
+        json.dump(centralityDict,open(fileLocation+'centrality.json','w'))
 
     print('Calculating degrees')
     degreeDict = G.degree()
@@ -188,7 +188,7 @@ def main():
 
     xaxis = templateSizes
 
-    baseName = getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure'])
+    baseName = fileLocation + "results/" + getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure'])
     
     with open(baseName + '_all_values.txt','w') as f:
         for templateSize in valueMeasurements:
@@ -214,13 +214,13 @@ def main():
             for alg in allSuccessfulTimeMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulTimeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open('failures.txt','w') as f:
+    with open(baseName + 'failures.txt','w') as f:
         for templateSize in failures:
             f.write(str(templateSize))
             for alg in failures[templateSize]:
                 f.write(" "+str(failures[templateSize][alg]))
             f.write('\n')
-    with open('stats.txt','w') as f:
+    with open(baseName + 'stats.txt','w') as f:
         f.write('candidates per skill\n')
         for k in skillToWorkers:
             f.write(k +" "+str(len([x for x in skillToWorkers[k] if x in APSP]))+'\n')
