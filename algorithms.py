@@ -222,7 +222,7 @@ def rarestFirst(candidates, APSP):
                     closestNeighborDist = d
             
             solutionCost += closestNeighborDist
-            solution[t][closestNeighbor]
+            solution[t] = closestNeighbor
         
         if solutionCost < bestSolutionCost:
             bestSolutionCost = solutionCost
