@@ -123,7 +123,7 @@ def main():
         allSuccessfulValueMeasurements[i] = dict()
         allSuccessfulTimeMeasurements[i] = dict()
         failures[i] = dict()
-        for j in range(0,5):
+        for j in range(0,6):
             valueMeasurements[i][j] = []
             timeMeasurements[i][j] = []
             allSuccessfulValueMeasurements[i][j] = []
