@@ -129,7 +129,7 @@ def main():
             allSuccessfulValueMeasurements[i][j] = []
             allSuccessfulTimeMeasurements[i][j] = []
 
-    numIterations = 50
+    numIterations = int(config['numIterations'])
     for iteration in range(0,numIterations):
         print("iteration:",iteration)
         template = nx.DiGraph()
