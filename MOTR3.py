@@ -99,7 +99,7 @@ def main():
             for s in di:
                 sk.append(s)
         else:
-            sk = [max(di.iterkeys(), key=(lambda key: di[key]))]
+            sk = [max(di.keys(), key=(lambda key: di[key]))]
         
         for s in sk:
             skillToWorkers[s].append(a)
