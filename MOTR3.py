@@ -56,11 +56,21 @@ def main():
     print('Edges: ',G.number_of_edges())
 
     before = datetime.datetime.now()
-    APSP = nx.all_pairs_shortest_path_length(G)
-    print("APSP created. It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
+    try:
+        APSP = json.load(open('apsp.json','r'))
+        print('apsp found')
+    except FileNotFoundError:
+        APSP = dict(nx.all_pairs_shortest_path_length(G))
+        print('apsp created')
+        json.dump(APSP,open('apsp.json','w'))
+    print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
     print('Calculating centrality')
+    try:
+        centralityDict = json.load(open('centrality.json','r'))
+    except FileNotFoundError:
     centralityDict = nx.closeness_centrality(G)
+        json.dump(centralityDict,open('centrality.json','w'))
 
     print('Calculating degrees')
     degreeDict = G.degree()
