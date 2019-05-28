@@ -6,13 +6,10 @@ import sys
 def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
 
     matrix = dict()
-    counter = 0
     # the id of the root node with the maximum value
     rootNodeWithMinValue = -1
     # the value of the root node in template tree with the maximum value
     minValueOfRoot = sys.maxsize
-    # when true this is the final iteration, i.e. the last node of the template is examined
-    finalIter = False
     minNodeDict = dict()
     minNode = None
     
@@ -20,11 +17,6 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
     halt = False
 
     for v in ordering: # v is the node in the post ordering of the nodes in T. go bottom up in the template tree
-        # if true this is the final iteration so switch the value of finalIter
-        if counter == (T.number_of_nodes() - 1):
-            finalIter = True
-
-        counter += 1
 
         # for each candicate for position v
         for z in list(candidatesDict[v]):
@@ -76,7 +68,7 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
             
             currentCell = Cell(sumValues, nodeDict)
 
-            if sumValues < minValueOfRoot and finalIter:
+            if sumValues < minValueOfRoot and v == ordering[-1]:
                 minValueOfRoot = sumValues
                 rootNodeWithMinValue = z
             matrix[z, v] = currentCell
