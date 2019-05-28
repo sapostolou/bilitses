@@ -46,7 +46,7 @@ def main():
         config = json.load(data_file)
     
     fileLocation = os.path.abspath(str(config['filesBasePath']))
-    edgesFileLocation = os.path.join(fileLocation,str(config['edgesFileName'])
+    edgesFileLocation = os.path.join(fileLocation,str(config['edgesFileName']))
     weightedEdges = bool(config['weighted'])
 
     authorData = json.load(open(os.path.join(fileLocation,str(config['workerData'])),'r'))
