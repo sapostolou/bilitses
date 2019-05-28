@@ -46,16 +46,24 @@ def main():
     
     fileLocation = str(config['filesBasePath'])
     edgesFileLocation = fileLocation + str(config['edgesFileName'])
+    weightedEdges = bool(config['weighted'])
 
     authorData = json.load(open(fileLocation + str(config['workerData']),'r'))
 
     print('Reading edge list and creating G...')
 
     if 'max_CCS' in edgesFileLocation:
-        G = nx.read_edgelist(edgesFileLocation)
+        if weighted:
+            G = nx.read_weighted_edgelist(edgesFileLocation)
+        else:
+            G = nx.read_edgelist(edgesFileLocation)
     else:
-        G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
-        nx.write_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+        if weighted:
+            G = max(nx.connected_component_subgraphs(nx.read_weighted_edgelist(edgesFileLocation)),key=len)
+            nx.write_weighted_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+        else:
+            G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
+            nx.write_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
     
     print('Nodes: ',G.number_of_nodes())
     print('Edges: ',G.number_of_edges())
