@@ -47,7 +47,7 @@ def main():
     
     fileLocation = os.path.abspath(str(config['filesBasePath']))
     edgesFileLocation = os.path.join(fileLocation,str(config['edgesFileName']))
-    weightedEdges = bool(config['weighted'])
+    weighted = bool(config['weighted'])
 
     authorData = json.load(open(os.path.join(fileLocation,str(config['workerData'])),'r'))
 
@@ -58,13 +58,14 @@ def main():
             G = nx.read_weighted_edgelist(edgesFileLocation)
         else:
             G = nx.read_edgelist(edgesFileLocation)
+        print('found edge file')
     else:
         if weighted:
             G = max(nx.connected_component_subgraphs(nx.read_weighted_edgelist(edgesFileLocation)),key=len)
-            nx.write_weighted_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+            nx.write_weighted_edgelist(G, edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
         else:
             G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
-            nx.write_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+            nx.write_edgelist(G, edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
     
     print('Nodes: ',G.number_of_nodes())
     print('Edges: ',G.number_of_edges())
@@ -88,6 +89,7 @@ def main():
     print('Calculating centrality')
     try:
         centralityDict = json.load(open(os.path.join(fileLocation,'centrality.json'),'r'))
+        print('centrality found')
     except FileNotFoundError:
         centralityDict = nx.closeness_centrality(G)
         json.dump(centralityDict,open(os.path.join(fileLocation,'centrality.json'),'w'))
