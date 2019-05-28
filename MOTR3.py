@@ -51,7 +51,12 @@ def main():
 
     print('Reading edge list and creating G...')
 
-    G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
+    if 'max_CCS' in edgesFileLocation:
+        G = nx.read_edgelist(edgesFileLocation)
+    else:
+        G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
+        nx.write_edgelist(edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+    
     print('Nodes: ',G.number_of_nodes())
     print('Edges: ',G.number_of_edges())
 
