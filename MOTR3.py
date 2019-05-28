@@ -236,13 +236,13 @@ def main():
             for alg in allSuccessfulTimeMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulTimeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(os.path.join(baseName,'failures.txt'),'w') as f:
+    with open(os.path.join(fileLocation,"results",'failures.txt'),'w') as f:
         for templateSize in failures:
             f.write(str(templateSize))
             for alg in failures[templateSize]:
                 f.write(" "+str(failures[templateSize][alg]))
             f.write('\n')
-    with open(os.path.join(baseName,'stats.txt'),'w') as f:
+    with open(os.path.join(fileLocation,"results",'stats.txt'),'w') as f:
         f.write('candidates per skill\n')
         for k in skillToWorkers:
             f.write(k +" "+str(len([x for x in skillToWorkers[k] if x in APSP]))+'\n')
