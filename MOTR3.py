@@ -70,9 +70,15 @@ def main():
 
     before = datetime.datetime.now()
     try:
+        if weighted:
+            APSP = json.load(open(fileLocation+'apsp_weighted.json','r'))
+        else:
         APSP = json.load(open(fileLocation+'apsp.json','r'))
         print('apsp found')
     except FileNotFoundError:
+        if weighted:
+            APSP = dict(nx.all_pairs_djikstra(G))
+        else:
         APSP = dict(nx.all_pairs_shortest_path_length(G))
         print('apsp created')
         json.dump(APSP,open(fileLocation+'apsp.json','w'))
