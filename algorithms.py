@@ -19,7 +19,7 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
     for v in ordering: # v is the node in the post ordering of the nodes in T. go bottom up in the template tree
 
         # for each candicate for position v
-        for z in list(candidatesDict[v]):
+        for z in candidatesDict[v]:
             sumValues = 0
             nodeDict = dict()
             
@@ -33,7 +33,7 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
                 minNodeDict = None
 
                 # for each candidate for position u (the successor of v)
-                for w in list(candidatesDict[u]):
+                for w in candidatesDict[u]:
 
                     if (w not in APSP) or (z not in APSP[w]):
                         continue
@@ -163,7 +163,7 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
         for v,u in bfsEdges:
             closestNode = None
             closestNodeDistance = sys.maxsize
-            candidates_u = list(candidates[u])
+            candidates_u = candidates[u]
             for x in candidates_u:
                 if APSP[result_r[v]][x] < closestNodeDistance and x not in nodesUsed_r:
                     closestNodeDistance = APSP[result_r[v]][x]
