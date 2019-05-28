@@ -58,7 +58,7 @@ def main():
             G = nx.read_weighted_edgelist(edgesFileLocation)
         else:
             G = nx.read_edgelist(edgesFileLocation)
-        print('found edge file')
+        print('found connected edge file')
     else:
         if weighted:
             G = max(nx.connected_component_subgraphs(nx.read_weighted_edgelist(edgesFileLocation)),key=len)
@@ -66,6 +66,7 @@ def main():
         else:
             G = max(nx.connected_component_subgraphs(nx.read_edgelist(edgesFileLocation)),key=len)
             nx.write_edgelist(G, edgesFileLocation.rstrip('.txt') + '_max_CCS.txt')
+        print('created connected edge file')
     
     print('Nodes: ',G.number_of_nodes())
     print('Edges: ',G.number_of_edges())
@@ -86,13 +87,13 @@ def main():
         json.dump(APSP,open(os.path.join(fileLocation,'apsp.json'),'w'))
     print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
-    print('Calculating centrality')
     try:
         centralityDict = json.load(open(os.path.join(fileLocation,'centrality.json'),'r'))
         print('centrality found')
     except FileNotFoundError:
         centralityDict = nx.closeness_centrality(G)
         json.dump(centralityDict,open(os.path.join(fileLocation,'centrality.json'),'w'))
+        print('centrality created')
 
     print('Calculating degrees')
     degreeDict = G.degree()
