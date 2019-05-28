@@ -73,13 +73,13 @@ def main():
         if weighted:
             APSP = json.load(open(fileLocation+'apsp_weighted.json','r'))
         else:
-        APSP = json.load(open(fileLocation+'apsp.json','r'))
+            APSP = json.load(open(fileLocation+'apsp.json','r'))
         print('apsp found')
     except FileNotFoundError:
         if weighted:
             APSP = dict(nx.all_pairs_djikstra(G))
         else:
-        APSP = dict(nx.all_pairs_shortest_path_length(G))
+            APSP = dict(nx.all_pairs_shortest_path_length(G))
         print('apsp created')
         json.dump(APSP,open(fileLocation+'apsp.json','w'))
     print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
@@ -94,7 +94,7 @@ def main():
     print('Calculating degrees')
     degreeDict = G.degree()
 
-    # skillToWorkers contains a map of skill to person ids relative to it
+    # skillToWorkers contains a map of skill to person ids relative to it. used for creating the candidate sets
     skillToWorkers= defaultdict(list)
     skills = set()
     
