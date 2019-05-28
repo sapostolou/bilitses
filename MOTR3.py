@@ -1,6 +1,7 @@
 import networkx as nx
 import csv
 import sys
+import os
 from collections import defaultdict
 import random
 random.seed()
@@ -44,11 +45,11 @@ def main():
     with open('config.json') as data_file:    
         config = json.load(data_file)
     
-    fileLocation = str(config['filesBasePath'])
-    edgesFileLocation = fileLocation + str(config['edgesFileName'])
+    fileLocation = os.path.abspath(str(config['filesBasePath']))
+    edgesFileLocation = os.path.join(fileLocation,str(config['edgesFileName'])
     weightedEdges = bool(config['weighted'])
 
-    authorData = json.load(open(fileLocation + str(config['workerData']),'r'))
+    authorData = json.load(open(os.path.join(fileLocation,str(config['workerData'])),'r'))
 
     print('Reading edge list and creating G...')
 
@@ -71,9 +72,9 @@ def main():
     before = datetime.datetime.now()
     try:
         if weighted:
-            APSP = json.load(open(fileLocation+'apsp_weighted.json','r'))
+            APSP = json.load(open(os.path.join(fileLocation,'apsp_weighted.json'),'r'))
         else:
-            APSP = json.load(open(fileLocation+'apsp.json','r'))
+            APSP = json.load(open(os.path.join(fileLocation,'apsp.json'),'r'))
         print('apsp found')
     except FileNotFoundError:
         if weighted:
@@ -81,15 +82,15 @@ def main():
         else:
             APSP = dict(nx.all_pairs_shortest_path_length(G))
         print('apsp created')
-        json.dump(APSP,open(fileLocation+'apsp.json','w'))
+        json.dump(APSP,open(os.path.join(fileLocation,'apsp.json'),'w'))
     print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
     print('Calculating centrality')
     try:
-        centralityDict = json.load(open(fileLocation+'centrality.json','r'))
+        centralityDict = json.load(open(os.path.join(fileLocation,'centrality.json'),'r'))
     except FileNotFoundError:
         centralityDict = nx.closeness_centrality(G)
-        json.dump(centralityDict,open(fileLocation+'centrality.json','w'))
+        json.dump(centralityDict,open(os.path.join(fileLocation,'centrality.json'),'w'))
 
     print('Calculating degrees')
     degreeDict = G.degree()
@@ -207,7 +208,7 @@ def main():
 
     xaxis = templateSizes
 
-    baseName = fileLocation + "results/" + getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure'])
+    baseName = os.path.join(fileLocation,"results",getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure']))
     
     with open(baseName + '_all_values.txt','w') as f:
         for templateSize in valueMeasurements:
@@ -233,13 +234,13 @@ def main():
             for alg in allSuccessfulTimeMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulTimeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(baseName + 'failures.txt','w') as f:
+    with open(os.path.join(baseName,'failures.txt'),'w') as f:
         for templateSize in failures:
             f.write(str(templateSize))
             for alg in failures[templateSize]:
                 f.write(" "+str(failures[templateSize][alg]))
             f.write('\n')
-    with open(baseName + 'stats.txt','w') as f:
+    with open(os.path.join(baseName,'stats.txt'),'w') as f:
         f.write('candidates per skill\n')
         for k in skillToWorkers:
             f.write(k +" "+str(len([x for x in skillToWorkers[k] if x in APSP]))+'\n')
