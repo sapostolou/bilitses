@@ -186,39 +186,40 @@ def main():
 
     xaxis = templateSizes
 
-    baseName = os.path.join(fileLocation,"results",getBaseNameOfOutputFiles(config['manySkillsPerWorker'], config['repeatedSkillsInTemplate'], config['templateStructure']))
+    basePath = os.path.join(fileLocation,"results")
+    baseName = getBaseNameOfOutputFiles(config)
     
-    with open(baseName + '_all_values.txt','w') as f:
+    with open(os.path.join(basePath,baseName + '_all_values.txt'),'w') as f:
         for templateSize in valueMeasurements:
             f.write(str(templateSize))
             for alg in valueMeasurements[templateSize]:
                 f.write(" "+str(valueMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(baseName + '_all_times.txt','w') as f:
+    with open(os.path.join(basePath,baseName + '_all_times.txt'),'w') as f:
         for templateSize in timeMeasurements:
             f.write(str(templateSize))
             for alg in timeMeasurements[templateSize]:
                 f.write(" "+str(timeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(baseName + '_allSuccessful_values.txt','w') as f:
+    with open(os.path.join(basePath,baseName + '_allSuccessful_values.txt'),'w') as f:
         for templateSize in allSuccessfulValueMeasurements:
             f.write(str(templateSize))
             for alg in allSuccessfulValueMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulValueMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(baseName + '_allSuccessful_times.txt','w') as f:
+    with open(os.path.join(basePath,baseName + '_allSuccessful_times.txt'),'w') as f:
         for templateSize in allSuccessfulTimeMeasurements:
             f.write(str(templateSize))
             for alg in allSuccessfulTimeMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulTimeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(os.path.join(fileLocation,"results",'failures.txt'),'w') as f:
+    with open(os.path.join(basePath,'failures.txt'),'w') as f:
         for templateSize in failures:
             f.write(str(templateSize))
             for alg in failures[templateSize]:
                 f.write(" "+str(failures[templateSize][alg]))
             f.write('\n')
-    with open(os.path.join(fileLocation,"results",'stats.txt'),'w') as f:
+    with open(os.path.join(basePath,'stats.txt'),'w') as f:
         f.write('candidates per skill\n')
         for k in skillToWorkers:
             f.write(k +" "+str(len([x for x in skillToWorkers[k] if x in APSP]))+'\n')

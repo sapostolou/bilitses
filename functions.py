@@ -49,7 +49,10 @@ class Cell:
         self.v = value
         self.d = diction
 
-def getBaseNameOfOutputFiles(manySkillsPerWorker, repeatedSkillsInTemplate, templateType):
+def getBaseNameOfOutputFiles(config):
+    manySkillsPerWorker = config['manySkillsPerWorker']
+    repeatedSkillsInTemplate = config['repeatedSkillsInTemplate']
+    templateType = config['templateStructure']
     name = ''
     if manySkillsPerWorker:
         name += 'm'
