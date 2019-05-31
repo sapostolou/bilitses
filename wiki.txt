@@ -1,13 +1,12 @@
-1. To add a new algorithm
+1 To add a new algorithm
 1.1 Create algorithm in algorithms.py file
 1.1.1 The function should output two values, the first is the solution cost and the second the solution itself, which should be a dictionary mapping template nodes to graph nodes
 1.2 Import algorithm in MOTR3.py (both as an elif and in the "for" line)
 1.3 Add function call in runSingleIteration function
 1.4 Increment integer in for j in range(0,6): in MOTR3
 
+2 TODO
+2.1 To change line if sumValues < minValueOfRoot and finalIter: in both Dp and DPH
 
-
-
-
-Notes:
-1. To change line if sumValues < minValueOfRoot and finalIter: in both Dp and DPH
+3 Instructions
+3.1 workerData files must be comma delimited files where in each line first element is the node id and the rest are the skills ordered by frequency

@@ -1,6 +1,7 @@
 from collections import Counter
 import networkx as nx
 from math import ceil
+import os
 
 def validSolution(solution, template, candidates, value, APSP):
     if solution == None:
@@ -61,3 +62,31 @@ def getBaseNameOfOutputFiles(manySkillsPerWorker, repeatedSkillsInTemplate, temp
     name += templateType
 
     return name
+
+def readWorkerDataFiles(G,config):
+
+    workerDataFile = open(os.path.join(os.path.abspath(str(config['filesBasePath'])),str(config['workerData'])),'r')
+    skillToWorkers= defaultdict(list)
+    skills = set()
+
+    # Assign skills to workers
+    for line in workerDataFile:
+
+        tokens = line.split(',')
+        id = tokens[0]
+        
+        if not G.has_node(a):
+            continue
+
+        mostFrequentSkill = tokens[1]
+        otherSkills = tokens[2:]
+
+        skillToWorkers[mostFrequentSkill].append(id)
+        skills.add(mostFrequentSkill)
+
+        if config['manySkillsPerWorker']:
+            for s in otherSkills:
+                skillToWorkers[s].append(id)
+                skills.add(s)
+    close(workerDataFile)
+    return skillToWorkers, skills

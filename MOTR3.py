@@ -8,7 +8,7 @@ random.seed()
 import datetime
 import json
 from math import floor,log,ceil
-from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles
+from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles, readWorkerDataFiles
 from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot, rarestFirst
 
 def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G):
@@ -49,7 +49,7 @@ def main():
     edgesFileLocation = os.path.join(fileLocation,str(config['edgesFileName']))
     weighted = bool(config['weighted'])
 
-    authorData = json.load(open(os.path.join(fileLocation,str(config['workerData'])),'r'))
+    workerDataFile = open(os.path.join(fileLocation,str(config['workerData'])),'r')
 
     print('Reading edge list and creating G...')
 
@@ -99,39 +99,13 @@ def main():
     degreeDict = G.degree()
 
     # skillToWorkers contains a map of skill to person ids relative to it. used for creating the candidate sets
-    skillToWorkers= defaultdict(list)
-    skills = set()
-    
-    if fileLocation.find('movies')>-1:
-        dlmtr = ','
-    else:
-        dlmtr = ' '
-
-    # Assign skills to workers
-    for a in authorData:
-        if not G.has_node(a):
-            continue
-
-        if config['useFields']:
-            di = authorData[a]['fields']
-        else:
-            di = authorData[a]['confs']
-
-        sk = []
-        if config['manySkillsPerWorker']:
-            for s in di:
-                sk.append(s)
-        else:
-            sk = [max(di.keys(), key=(lambda key: di[key]))]
-        
-        for s in sk:
-            skillToWorkers[s].append(a)
-            skills.add(s)
+    skillToWorkers, skill = readWorkerDataFiles(G, config)
     
     if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
     else:
         maxNodesInTemplate = 31
+        
     valueSums = dict()
     timeSums = dict()
     templateSizes = range(2,maxNodesInTemplate+1)
