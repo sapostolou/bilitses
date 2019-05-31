@@ -2,6 +2,7 @@ from collections import Counter
 import networkx as nx
 from math import ceil
 import os
+from collections import defaultdict
 
 def validSolution(solution, template, candidates, value, APSP):
     if solution == None:
@@ -72,10 +73,10 @@ def readWorkerDataFiles(G,config):
     # Assign skills to workers
     for line in workerDataFile:
 
-        tokens = line.split(',')
+        tokens = line.rstrip('\n').split(',')
         id = tokens[0]
         
-        if not G.has_node(a):
+        if not G.has_node(id):
             continue
 
         mostFrequentSkill = tokens[1]
@@ -88,5 +89,5 @@ def readWorkerDataFiles(G,config):
             for s in otherSkills:
                 skillToWorkers[s].append(id)
                 skills.add(s)
-    close(workerDataFile)
+    workerDataFile.close()
     return skillToWorkers, skills

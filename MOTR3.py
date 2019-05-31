@@ -99,13 +99,13 @@ def main():
     degreeDict = G.degree()
 
     # skillToWorkers contains a map of skill to person ids relative to it. used for creating the candidate sets
-    skillToWorkers, skill = readWorkerDataFiles(G, config)
+    skillToWorkers, skills = readWorkerDataFiles(G, config)
     
     if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
     else:
         maxNodesInTemplate = 31
-        
+
     valueSums = dict()
     timeSums = dict()
     templateSizes = range(2,maxNodesInTemplate+1)
@@ -127,6 +127,7 @@ def main():
             allSuccessfulTimeMeasurements[i][j] = []
 
     numIterations = int(config['numIterations'])
+
     for iteration in range(0,numIterations):
         print("iteration:",iteration)
         template = nx.DiGraph()
