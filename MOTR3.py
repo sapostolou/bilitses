@@ -114,6 +114,7 @@ def main():
     allSuccessfulValueMeasurements = dict()
     allSuccessfulTimeMeasurements = dict()
     failures = dict()
+    failuresExist = False
     for i in templateSizes:
         valueMeasurements[i] = dict()
         timeMeasurements[i] = dict()
@@ -182,7 +183,10 @@ def main():
             timeMeasurements[templateSize][alg]                 = sum(timeMeasurements[templateSize][alg])                  / float(len(timeMeasurements[templateSize][alg]))
             allSuccessfulTimeMeasurements[templateSize][alg]    = sum(allSuccessfulTimeMeasurements[templateSize][alg])     / float(len(allSuccessfulTimeMeasurements[templateSize][alg]))
             
-            failures[templateSize][alg] = iterationsMissing / float(numIterations)
+            f = iterationsMissing / float(numIterations)
+            failures[templateSize][alg] = f
+            if f != 0:
+                failuresExist = True
 
     xaxis = templateSizes
 
@@ -213,12 +217,14 @@ def main():
             for alg in allSuccessfulTimeMeasurements[templateSize]:
                 f.write(" "+str(allSuccessfulTimeMeasurements[templateSize][alg]))
             f.write('\n')
-    with open(os.path.join(basePath,'failures.txt'),'w') as f:
-        for templateSize in failures:
-            f.write(str(templateSize))
-            for alg in failures[templateSize]:
-                f.write(" "+str(failures[templateSize][alg]))
-            f.write('\n')
+    
+    if failuresExist:
+        with open(os.path.join(basePath,'failures.txt'),'w') as f:
+            for templateSize in failures:
+                f.write(str(templateSize))
+                for alg in failures[templateSize]:
+                    f.write(" "+str(failures[templateSize][alg]))
+                f.write('\n')
     with open(os.path.join(basePath,'stats.txt'),'w') as f:
         f.write('candidates per skill\n')
         for k in skillToWorkers:
