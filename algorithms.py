@@ -126,20 +126,20 @@ def TopDown(candidates,APSP,template,G,centralityDict):
     
     # for each successor pick the closest vertex in the respective candidate set
     for v,u in bfsEdges:
-        closestNode = None
-        closestNodeDistance = sys.maxsize
+        minCostNode = None
+        minCost = sys.maxsize
         for w in candidates[u]:
             if (w in nodesUsed) or (w not in APSP):
                 continue
-            currDist = APSP[result[v]][w]
-            if currDist < closestNodeDistance:
-                closestNodeDistance = currDist
-                closestNode = w
-        if closestNode == None:
+            cost = APSP[result[v]][w]
+            if cost < minCost:
+                minCost = cost
+                minCostNode = w
+        if minCostNode == None:
             print("no node found")
-        result[u] = closestNode
+        result[u] = minCostNode
         resultSum = resultSum + closestNodeDistance
-        nodesUsed.add(closestNode)
+        nodesUsed.add(minCostNode)
     return resultSum, result
 
 def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
