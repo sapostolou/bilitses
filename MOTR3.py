@@ -88,11 +88,17 @@ def main():
     print("It took:", (datetime.datetime.now() - before).total_seconds(), "seconds.")     
 
     try:
-        centralityDict = json.load(open(os.path.join(fileLocation,'centrality.json'),'r'))
+        if weighted:
+            centralityDict = json.load(open(os.path.join(fileLocation,'centrality_weighted.json'),'r'))
+        else:
+            centralityDict = json.load(open(os.path.join(fileLocation,'centrality.json'),'r'))
         print('centrality found')
     except FileNotFoundError:
         centralityDict = nx.closeness_centrality(G)
-        json.dump(centralityDict,open(os.path.join(fileLocation,'centrality.json'),'w'))
+        if weighted:
+            json.dump(centralityDict,open(os.path.join(fileLocation,'centrality_weighted.json'),'w'))
+        else:
+            json.dump(centralityDict,open(os.path.join(fileLocation,'centrality.json'),'w'))
         print('centrality created')
 
     print('Calculating degrees')
@@ -109,7 +115,7 @@ def main():
     if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
     else:
-        maxNodesInTemplate = config['maxNodesInTemplate']
+        maxNodesInTemplate = int(config['maxNodesInTemplate'])
 
     valueSums = dict()
     timeSums = dict()
