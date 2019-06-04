@@ -115,7 +115,7 @@ def maxDegree(candidates, APSP, template, G, degreeDict):
 
 def singleSourceTopDown(source, candidates, APSP, template, G, centrality, fit):
     bfsEdges = nx.bfs_edges(template,0)
-    nodesUsed = set(int(source))
+    nodesUsed = set(source)
     result = {0: source}
     resultTotalCost = 0
     
