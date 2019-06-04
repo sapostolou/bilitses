@@ -7,6 +7,7 @@
 
 2 TODO
 2.1 To change line if sumValues < minValueOfRoot and finalIter: in both Dp and DPH
+2.2 Unification of TopDown and TopDownCheckAllForRoot
 
 3 Instructions
 3.1 workerData files must be comma delimited files where in each line first element is the node id and the rest are the skills ordered by frequency

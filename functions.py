@@ -3,6 +3,7 @@ import networkx as nx
 from math import ceil
 import os
 from collections import defaultdict
+import json
 
 def validSolution(solution, template, candidates, value, APSP):
     if solution == None:
@@ -94,3 +95,21 @@ def readWorkerDataFiles(G,config):
                 skills.add(s)
     workerDataFile.close()
     return skillToWorkers, skills
+
+def createFitDictForAcademic(config, candidates):
+    # create a dict[a,b] storing the fit of worker a for position b
+
+    fit = dict()
+
+    with open(os.path.join(os.path.abspath(str(config['filesBasePath'])),'authorData.json')) as f:
+        authorData = json.load(f)
+
+    # skil data is a dict with conferences to average publications by each contributor
+    with open(os.path.join(os.path.abspath(str(config['filesBasePath'])),config['skillData'])) as f:
+        skillData = json.load(f)
+
+    for c in candidates:
+        for w in candidates[c]:
+            fit[w,c] = float(authorData[w]['confs'][c]) / skillData[c]['avg']
+
+    return fit

@@ -3,7 +3,7 @@ from functions import Cell
 import networkx as nx
 import sys
 
-def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
+def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True, fitDict=None):
 
     matrix = dict()
     # the id of the root node with the maximum value
@@ -45,7 +45,12 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
                             continue
 
                     # find candidate whose value plus distance from z is minimum
-                    if ((matrix[w, u].v + APSP[w][z]) < minValue):
+                    if fitDict == None:
+                        fit = 0
+                    else:
+                        fit = fitDict[w,T.node[u]['skill']]
+
+                    if ((matrix[w, u].v + APSP[w][z]) + fit < minValue):
                         minValue = matrix[w, u].v + APSP[w][z]
                         minNode = w
                         minNodeDict = matrix[w, u].d
@@ -79,8 +84,8 @@ def DPH(candidatesDict, APSP, T, ordering, checkForOverlaps=True):
     matrix[rootNodeWithMinValue,0].d[0] = rootNodeWithMinValue
     return minValueOfRoot, matrix[rootNodeWithMinValue,0].d
 
-def DP(candidatesDict, APSP, T, ordering):
-    return DPH(candidatesDict,APSP,T,ordering,False)
+def DP(candidatesDict, APSP, T, ordering, fitDict):
+    return DPH(candidatesDict,APSP,T,ordering,False,fitDict)
 
 def maxDegree(candidates, APSP, template, G, degreeDict):
     nodesUsed = set()
@@ -108,7 +113,7 @@ def maxDegree(candidates, APSP, template, G, degreeDict):
         resultCost += APSP[result[v]][maxDegNode]
     return resultCost, result
 
-def TopDown(candidates,APSP,template,G,centralityDict):
+def TopDown(candidates,APSP,template,G,centralityDict, fitDict):
     bfsEdges = nx.bfs_edges(template,0)
     maxRootCentrality = 0
     maxRootCentralityNode = None
@@ -131,18 +136,22 @@ def TopDown(candidates,APSP,template,G,centralityDict):
         for w in candidates[u]:
             if (w in nodesUsed) or (w not in APSP):
                 continue
-            cost = APSP[result[v]][w]
+            if fitDict == None:
+                cost = APSP[result[v]][w]
+            else:
+                cost = APSP[result[v]][w] + fitDict[w,template.node[u]['skill']]
+
             if cost < minCost:
                 minCost = cost
                 minCostNode = w
         if minCostNode == None:
             print("no node found")
         result[u] = minCostNode
-        resultSum = resultSum + closestNodeDistance
+        resultSum = resultSum + minCost
         nodesUsed.add(minCostNode)
     return resultSum, result
 
-def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
+def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict, fitDict):
     bfsEdges = list(nx.bfs_edges(template,0))
     result = dict()
     resultSum = 0
@@ -165,8 +174,13 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
             closestNodeDistance = sys.maxsize
             candidates_u = candidates[u]
             for x in candidates_u:
-                if APSP[result_r[v]][x] < closestNodeDistance and x not in nodesUsed_r:
-                    closestNodeDistance = APSP[result_r[v]][x]
+                if fitDict == None:
+                    cost = APSP[result_r[v]][x]
+                else:
+                    cost = APSP[result_r[v]][x] + fitDict[x,template.node[u]['skill']]
+
+                if cost < closestNodeDistance and x not in nodesUsed_r:
+                    closestNodeDistance = cost
                     closestNode = x
             if closestNode == None:
                 print("no node found")
@@ -182,7 +196,7 @@ def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict):
 
     return minRootValue, minSolution
 
-def rarestFirst(candidates, APSP):
+def rarestFirst(template, candidates, APSP, fitDict):
     # find rarest skill i.e. the one with the smallest candidate set
     rarestSkillCandidatesNum = sys.maxsize
     rarestSkill = None
@@ -208,10 +222,13 @@ def rarestFirst(candidates, APSP):
 
             for u in candidates[t]:
                 # find the one closest to v
-                d = APSP[v][u]
-                if d < closestNeighborDist:
+                if fitDict == None:
+                    cost = APSP[v][u]
+                else:
+                    cost = APSP[v][u] + fitDict[u,template.node[t]['skill']]
+                if cost < closestNeighborDist:
                     closestNeighbor = u
-                    closestNeighborDist = d
+                    closestNeighborDist = cost
             
             solutionCost += closestNeighborDist
             solution[t] = closestNeighbor

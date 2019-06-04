@@ -8,10 +8,10 @@ random.seed()
 import datetime
 import json
 from math import floor,log,ceil
-from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles, readWorkerDataFiles
+from functions import validSolution, addNodeToTemplate, getBaseNameOfOutputFiles, readWorkerDataFiles, createFitDictForAcademic
 from algorithms import DP,DPH,maxDegree,TopDown,TopDownCheckAllForRoot, rarestFirst
 
-def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G):
+def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict, G, fitDict):
 
     postOrdering = list(nx.dfs_postorder_nodes(template, 0))
     currentValues = []
@@ -21,17 +21,17 @@ def runSingleIteration(candidatesDict,template, APSP, degreeDict, centralityDict
         before = datetime.datetime.now()
         
         if i == 0:
-            value, solution = DPH(candidatesDict, APSP, template, postOrdering)
+            value, solution = DPH(candidatesDict, APSP, template, postOrdering, fitDict)
         elif i == 1:
             value, solution = maxDegree(candidatesDict, APSP, template, G, degreeDict)
         elif i == 2:
             value, solution = maxDegree(candidatesDict, APSP, template, G, centralityDict)
         elif i == 3:
-            value, solution = TopDown(candidatesDict, APSP, template, G, centralityDict)
+            value, solution = TopDown(candidatesDict, APSP, template, G, centralityDict, fitDict)
         elif i == 4:
-            value, solution = TopDownCheckAllForRoot(candidatesDict, APSP, template, G, centralityDict)
+            value, solution = TopDownCheckAllForRoot(candidatesDict, APSP, template, G, centralityDict, fitDict)
         elif i == 5:
-            value, solution = rarestFirst(candidatesDict, APSP)
+            value, solution = rarestFirst(template, candidatesDict, APSP, fitDict)
         
         time = (datetime.datetime.now() - before).total_seconds()
 
@@ -100,6 +100,11 @@ def main():
 
     # skillToWorkers contains a map of skill to person ids relative to it. used for creating the candidate sets
     skillToWorkers, skills = readWorkerDataFiles(G, config)
+
+    if config['useFit']:
+        fitDict = createFitDictForAcademic(config, skillToWorkers)
+    else:
+        fitDict = None
     
     if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
@@ -161,7 +166,7 @@ def main():
             postOrdering = list(nx.dfs_postorder_nodes(template, 0))
 
             # Execute algorithms
-            currentValues,currentTimes = runSingleIteration(candidatesDict,template,APSP,degreeDict,centralityDict,G)
+            currentValues,currentTimes = runSingleIteration(candidatesDict,template,APSP,degreeDict,centralityDict,G, fitDict)
             numberOfAlgs = len(currentValues)
             for x in range(0,numberOfAlgs):
                 if currentValues[x] != None:
