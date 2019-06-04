@@ -109,7 +109,7 @@ def main():
     if not config['repeatedSkillsInTemplate']:
         maxNodesInTemplate = len(skills)
     else:
-        maxNodesInTemplate = 31
+        maxNodesInTemplate = config['maxNodesInTemplate']
 
     valueSums = dict()
     timeSums = dict()
