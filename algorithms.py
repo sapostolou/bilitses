@@ -113,88 +113,69 @@ def maxDegree(candidates, APSP, template, G, degreeDict):
         resultCost += APSP[result[v]][maxDegNode]
     return resultCost, result
 
-def TopDown(candidates,APSP,template,G,centralityDict, fitDict):
+def singleSourceTopDown(source, candidates, APSP, template, G, centrality, fit):
     bfsEdges = nx.bfs_edges(template,0)
-    maxRootCentrality = 0
-    maxRootCentralityNode = None
-    result = dict()
-    resultSum = 0
-    nodesUsed = set()
-
-    # for root pick node with highest degree centrality
-    for u in candidates[0]:
-        if centralityDict[u]>maxRootCentrality:
-            maxRootCentrality = centralityDict[u]
-            maxRootCentralityNode = u
-    result[0] = maxRootCentralityNode
-    nodesUsed.add(maxRootCentralityNode)
+    nodesUsed = set(int(source))
+    result = {0: source}
+    resultTotalCost = 0
     
-    # for each successor pick the closest vertex in the respective candidate set
     for v,u in bfsEdges:
+
         minCostNode = None
         minCost = sys.maxsize
+
         for w in candidates[u]:
+
             if (w in nodesUsed) or (w not in APSP):
                 continue
-            if fitDict == None:
+
+            if fit == None:
                 cost = APSP[result[v]][w]
             else:
-                cost = APSP[result[v]][w] + fitDict[w,template.node[u]['skill']]
+                cost = APSP[result[v]][w] + fit[w,template.node[u]['skill']]
 
             if cost < minCost:
                 minCost = cost
                 minCostNode = w
+
         if minCostNode == None:
-            print("no node found")
+            return None
+
         result[u] = minCostNode
-        resultSum = resultSum + minCost
+        resultTotalCost += minCost
         nodesUsed.add(minCostNode)
-    return resultSum, result
+
+    return resultTotalCost, result
+        
+
+def TopDown(candidates,APSP,template,G,centralityDict, fitDict):
+    
+    maxRootCentrality = 0
+    maxRootCentralityNode = None
+
+    # for root pick node with highest degree centrality
+    for u in candidates[0]:
+        if centralityDict[u] > maxRootCentrality:
+            maxRootCentrality = centralityDict[u]
+            maxRootCentralityNode = u
+
+    resultCost, result = singleSourceTopDown(maxRootCentralityNode, candidates, APSP, template, G, centralityDict, fitDict)
+    return resultCost, result
 
 def TopDownCheckAllForRoot(candidates,APSP,template,G,centralityDict, fitDict):
-    bfsEdges = list(nx.bfs_edges(template,0))
-    result = dict()
-    resultSum = 0
-    rootCandidatesAndValues = dict()
-    minRootValue = sys.maxsize
+
+    minSolutionCost = sys.maxsize
     minSolution = None
 
     for r in candidates[0]:
 
-        nodesUsed_r = set()
-        conflicts = set()
-        nodesUsed_r.add(r)
-        result_r = dict()
-        result_r[0] = r
-        sum_r = 0
+        resultCost, result = singleSourceTopDown(r, candidates, APSP, template, G, centralityDict, fitDict)
     
-        # for each successor pick the closest vertex in the respective candidate set
-        for v,u in bfsEdges:
-            closestNode = None
-            closestNodeDistance = sys.maxsize
-            candidates_u = candidates[u]
-            for x in candidates_u:
-                if fitDict == None:
-                    cost = APSP[result_r[v]][x]
-                else:
-                    cost = APSP[result_r[v]][x] + fitDict[x,template.node[u]['skill']]
+        if resultCost < minSolutionCost:
+            minSolutionCost = resultCost
+            minSolution = result
 
-                if cost < closestNodeDistance and x not in nodesUsed_r:
-                    closestNodeDistance = cost
-                    closestNode = x
-            if closestNode == None:
-                print("no node found")
-
-            result_r[u] = closestNode
-            sum_r += closestNodeDistance
-            nodesUsed_r.add(closestNode)
-
-        result_r[0] = r
-        if sum_r < minRootValue:
-            minRootValue = sum_r
-            minSolution = result_r
-
-    return minRootValue, minSolution
+    return minSolutionCost, minSolution
 
 def rarestFirst(template, candidates, APSP, fitDict):
     # find rarest skill i.e. the one with the smallest candidate set
